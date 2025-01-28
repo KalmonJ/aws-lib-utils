@@ -8,7 +8,7 @@
   },
   "keywords": [],
   "author": "KalmonJ",
-  "homepage": "https://github.com/KalmonJ/aws-utils",
+  "homepage": "https://github.com/KalmonJ/aws-lib-utils",
   "license": "ISC",
   "devDependencies": {
     "@types/mime-types": "^2.1.4",
