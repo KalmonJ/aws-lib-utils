@@ -1,5 +1,6 @@
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { getObjectUrl } from "../../utils/get-object-url";
 
 export type S3ClientConfig = ConstructorParameters<typeof S3Client>[number];
 
@@ -16,9 +17,11 @@ export type RequestPresigningArguments = Parameters<typeof getSignedUrl>[2];
 export async function presignedUrlUpload(
   file: File | null,
   props: S3Config,
-  presigningArguments: RequestPresigningArguments,
+  presigningArguments: RequestPresigningArguments
 ) {
   if (!file) return null;
+
+  if (!props.object.Body) throw new Error("Missing bucket name");
 
   const client = new S3Client(props);
   const command = new PutObjectCommand(props.object);
@@ -29,7 +32,7 @@ export async function presignedUrlUpload(
   });
 
   const response = await fetch(signedUrl, {
-    method: "POST",
+    method: "PUT",
     headers: {
       "Content-Length": file.size.toString(),
     },
@@ -40,5 +43,10 @@ export async function presignedUrlUpload(
 
   return {
     success: true,
+    url: getObjectUrl(
+      props.object.Bucket!,
+      props.region as string,
+      props.object.Key as string
+    ),
   };
 }
