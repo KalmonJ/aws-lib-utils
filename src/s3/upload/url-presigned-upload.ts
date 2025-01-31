@@ -21,7 +21,7 @@ export async function presignedUrlUpload(
 ) {
   if (!file) return null;
 
-  if (!props.object.Body) throw new Error("Missing bucket name");
+  if (!props.object.Bucket) throw new Error("Missing bucket name");
 
   const client = new S3Client(props);
   const command = new PutObjectCommand(props.object);
